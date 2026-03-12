@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetPractice — lbento (github: lucabarbosa) Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d47;
+    --accent: #bbff00;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --text-sub: #ffffff;
+    --text-link: #c7c7c7;
+    --text-dim: #cccccc;
+    --text-muted: #94a3b8;
+    --ip: #a78bfa;
+    --mask: #34d399;
+    --gateway: #fb923c;
+    --route: #60a5fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body
+  {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before
+  {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  header
+  {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .header-inner
+  {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .logo-area h1
+  {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 60%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .logo-area .sub
+  {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-top: 6px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+    .logo-area .link
+  {
+    font-size: 0.75rem;
+    color: var(--text-link);
+    margin-top: 6px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .badge-row
+  {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .badge
+  {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-blue { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--accent); }
+  .badge-purple { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; }
+  .badge-green { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--accent3); }
+
+  .section-label
+  {
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .concepts-grid
+  {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .concept-card
+  {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .concept-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .concept-card .icon {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .concept-card h3
+  {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .concept-card p
+  {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .ref-table
+  {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 48px;
+    font-size: 0.8rem;
+  }
+  .ref-table th
+  {
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .ref-table td
+  {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(30,45,71,0.5);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ref-table tr:hover td { background: var(--surface); }
+  .cidr { color: var(--ip); font-weight: 600; }
+  .mask-col { color: var(--mask); }
+  .hosts-col { color: var(--gateway); }
+
+  .tabs-wrapper { margin-bottom: 48px; }
+
+  .tabs-scroll
+  {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 1px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0;
+    scrollbar-width: none;
+  }
+  .tabs-scroll::-webkit-scrollbar { display: none; }
+
+  .tab-btn
+  {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 12px 18px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active
+  {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-panel { display: none; padding-top: 28px; }
+  .tab-panel.active { display: block; animation: fadeUp 0.3s ease; }
+
+  @keyframes fadeUp
+  {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .level-header
+  {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .level-num
+  {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--surface2);
+    line-height: 1;
+    -webkit-text-stroke: 1px var(--border);
+  }
+
+  .level-meta h2
+  {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .level-meta p
+  {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .difficulty
+  {
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .dot.on { background: var(--accent3); }
+  .dot.mid { background: var(--warn); }
+  .dot.hard { background: var(--danger); }
+
+  .diagram-box
+  {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    font-size: 0.78rem;
+  }
+
+  .diagram-box h4
+  {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .net-diagram
+  {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .device-row
+  {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .device-box
+  {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    min-width: 160px;
+  }
+
+  .device-name
+  {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field { margin: 3px 0; font-size: 0.75rem; }
+  .field .label { color: var(--text-dim); font-size: 0.65rem; margin-right: 6px; }
+  .val-ip { color: var(--ip); }
+  .val-mask { color: var(--mask); }
+  .val-gw { color: var(--gateway); }
+  .val-route { color: var(--route); }
+
+  .connector
+  {
+    color: var(--border);
+    font-size: 1.2rem;
+    padding: 0 4px;
+  }
+
+  .network-line
+  {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .net-label
+  {
+    background: rgba(0,212,255,0.06);
+    border: 1px dashed rgba(0,212,255,0.2);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    color: rgba(0,212,255,0.6);
+  }
+
+  .steps
+  {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .step
+  {
+    display: flex;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: rgba(0,212,255,0.3); }
+
+  .step-num
+  {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .step-body { flex: 1; }
+  .step-body strong { color: var(--text); font-size: 0.82rem; display: block; margin-bottom: 4px; }
+  .step-body p { color: var(--text-muted); font-size: 0.75rem; line-height: 1.6; }
+
+  code
+  {
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--ip);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+  }
+
+  .callout
+  {
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 0.78rem;
+    display: flex;
+    gap: 10px;
+    line-height: 1.6;
+  }
+  .callout-info { background: rgba(0,212,255,0.06); border: 1px solid rgba(0,212,255,0.2); color: var(--text-muted); }
+  .callout-warn { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); color: #fbbf24; }
+  .callout-tip  { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); color: var(--accent3); }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; }
+
+  .rules-grid
+  {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .rule-card
+  {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .rule-card:nth-child(2) { border-left-color: var(--ip); }
+  .rule-card:nth-child(3) { border-left-color: var(--mask); }
+  .rule-card:nth-child(4) { border-left-color: var(--gateway); }
+  .rule-card:nth-child(5) { border-left-color: var(--route); }
+  .rule-card:nth-child(6) { border-left-color: var(--warn); }
+  .rule-card:nth-child(7) { border-left-color: var(--danger); }
+
+  .rule-card p
+  {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  footer
+  {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 64px;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .connection-line
+  {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+  }
+  .connection-line .line
+  {
+    height: 1px;
+    width: 40px;
+    background: var(--border);
+  }
+  .connection-line.dashed .line
+  {
+    background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 4px, transparent 4px, transparent 8px);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <h1>NetPractice</h1>
+        <div class="sub">lbento guide (github: https://github.com/lucabarbosa)</div>
+        <a class = "link" href = "https://github.com/lucabarbosa">
+          github
+        </a>
+      </div>
+      <div class="badge-row">
+        <span class="badge badge-blue">TCP/IP</span>
+        <span class="badge badge-purple">Subnetting</span>
+        <span class="badge badge-green">10 Levels</span>
+      </div>  
+    </div>
+  </header>
+
+  <div class="section-label">Conceitos Fundamentais</div>
+  <div class="concepts-grid">
+
+    <div class="concept-card">
+      <div class="icon">🌐</div>
+      <h3>Endereço IP (IPv4)</h3>
+      <p>32 bits divididos em 4 octetos (ex: <code>192.168.1.10</code>). Identifica unicamente um dispositivo em uma rede. Intervalo: 0–255 por octeto.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="icon">🎭</div>
+      <h3>Máscara de Sub-rede</h3>
+      <p>Define qual parte do IP é a rede e qual é o host. Exemplo: <code>255.255.255.0</code> = /24 → os primeiros 24 bits são a rede.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="icon">🚪</div>
+      <h3>Gateway Padrão</h3>
+      <p>IP do roteador usado para sair da rede local. Todo dispositivo que precisa alcançar outra rede precisa de um gateway configurado.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="icon">🔀</div>
+      <h3>Roteador</h3>
+      <p>Conecta redes diferentes. Cada interface de um roteador pertence a uma rede diferente e tem seu próprio IP e máscara.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="icon">🔌</div>
+      <h3>Switch</h3>
+      <p>Conecta dispositivos dentro da <em>mesma</em> rede. Não separa redes — todos os dispositivos compartilham a mesma sub-rede.</p>
+    </div>
+
+    <div class="concept-card">
+      <div class="icon">🗺️</div>
+      <h3>Tabela de Rotas</h3>
+      <p>Mapeia destinos para o próximo hop. <code>0.0.0.0/0</code> é a rota padrão (default route) — envia tudo que não tem rota específica.</p>
+    </div>
+
+  </div>
+
+  <div class="section-label">Tabela de Sub-redes (Referência Rápida)</div>
+  <table class="ref-table" style="margin-bottom:48px">
+    <thead>
+      <tr>
+        <th>CIDR</th>
+        <th>Máscara</th>
+        <th>Hosts Utilizáveis</th>
+        <th>Primeiro host</th>
+        <th>Último host</th>
+        <th>Broadcast</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="cidr">/24</td><td class="mask-col">255.255.255.0</td><td class="hosts-col">254</td><td>.1</td><td>.254</td><td>.255</td></tr>
+      <tr><td class="cidr">/25</td><td class="mask-col">255.255.255.128</td><td class="hosts-col">126</td><td>.1</td><td>.126</td><td>.127</td></tr>
+      <tr><td class="cidr">/26</td><td class="mask-col">255.255.255.192</td><td class="hosts-col">62</td><td>.1</td><td>.62</td><td>.63</td></tr>
+      <tr><td class="cidr">/27</td><td class="mask-col">255.255.255.224</td><td class="hosts-col">30</td><td>.1</td><td>.30</td><td>.31</td></tr>
+      <tr><td class="cidr">/28</td><td class="mask-col">255.255.255.240</td><td class="hosts-col">14</td><td>.1</td><td>.14</td><td>.15</td></tr>
+      <tr><td class="cidr">/29</td><td class="mask-col">255.255.255.248</td><td class="hosts-col">6</td><td>.1</td><td>.6</td><td>.7</td></tr>
+      <tr><td class="cidr">/30</td><td class="mask-col">255.255.255.252</td><td class="hosts-col">2</td><td>.1</td><td>.2</td><td>.3</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label">Regras de Ouro</div>
+  <div class="rules-grid" style="margin-bottom:48px">
+    <div class="rule-card"><p>🔵 Dispositivos no mesmo switch devem estar na mesma sub-rede.</p></div>
+    <div class="rule-card"><p>🟣 Interfaces de roteador conectando redes diferentes devem estar em sub-redes diferentes.</p></div>
+    <div class="rule-card"><p>🟢 O gateway de um dispositivo deve ser um IP da mesma sub-rede que o dispositivo.</p></div>
+    <div class="rule-card"><p>🟠 Todo dispositivo que precisa sair da sua rede deve ter um gateway.</p></div>
+    <div class="rule-card"><p>🔵 <code>0.0.0.0/0</code> como destino na tabela de rotas = rota padrão.</p></div>
+    <div class="rule-card"><p>🟡 Nunca use o endereço de rede (primeiro) ou broadcast (último) em um host.</p></div>
+    <div class="rule-card"><p>🔴 IPs na mesma rede: apenas o último octeto (ou mais) muda — os bits de rede são iguais.</p></div>
+  </div>
+
+  <div class="section-label">Soluções por Nível</div>
+  <div class="tabs-wrapper">
+    <div class="tabs-scroll" id="tabsScroll">
+      <button class="tab-btn active" onclick="showTab(0)">Level 1</button>
+      <button class="tab-btn" onclick="showTab(1)">Level 2</button>
+      <button class="tab-btn" onclick="showTab(2)">Level 3</button>
+      <button class="tab-btn" onclick="showTab(3)">Level 4</button>
+      <button class="tab-btn" onclick="showTab(4)">Level 5</button>
+      <button class="tab-btn" onclick="showTab(5)">Level 6</button>
+      <button class="tab-btn" onclick="showTab(6)">Level 7</button>
+      <button class="tab-btn" onclick="showTab(7)">Level 8</button>
+      <button class="tab-btn" onclick="showTab(8)">Level 9</button>
+      <button class="tab-btn" onclick="showTab(9)">Level 10</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-0">
+      <div class="level-header">
+        <div class="level-num">01</div>
+        <div class="level-meta">
+          <h2>Dois Hosts — Comunicação Direta</h2>
+          <p>Sem roteadores. Dois hosts precisam se comunicar na mesma rede.</p>
+        </div>
+        <div class="difficulty" title="Dificuldade">
+          <div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        Dois hosts numa mesma rede devem ter IPs com o mesmo prefixo de rede e máscaras iguais.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A (Client A)</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">104.96.23.12</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+            </div>
+            <div class="connection-line">
+              <div class="line"></div>─────<div class="line"></div>
+            </div>
+            <div class="device-box">
+              <div class="device-name">Host B (Client B)</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">104.96.23.253</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Observe o IP já dado (Host A)</strong>
+            <p>O Host A já tem IP <code>104.96.23.12</code>. A rede é <code>104.96.23.0/24</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Configure o Host B na mesma rede</strong>
+            <p>Escolha qualquer IP em <code>104.96.23.1</code> – <code>104.96.23.254</code> que não seja o do Host A. Exemplo: <code>104.96.23.253</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Máscaras iguais</strong>
+            <p>Ambos devem ter máscara <code>255.255.255.0</code> (ou /24).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 2 ============ -->
+    <div class="tab-panel" id="panel-1">
+      <div class="level-header">
+        <div class="level-num">02</div>
+        <div class="level-meta">
+          <h2>Dois Hosts — Mesma Sub-rede</h2>
+          <p>Dois pares de hosts conectados diretamente. Cada par é uma rede isolada.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        A máscara /30 (<code>255.255.255.252</code>) permite apenas 2 hosts — útil para links ponto-a-ponto.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">192.168.98.2</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.252</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>─────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Host B</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">192.168.98.1</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.252</span></div>
+            </div>
+          </div>
+          <div style="margin: 8px 0; border-top: 1px dashed var(--border); padding-top: 12px"></div>
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host C</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">192.168.15.1</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.252</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>─────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Host D</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">192.168.15.2</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.252</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Par A–B: use /30</strong>
+            <p>Com máscara <code>/30</code>, só há 2 IPs utilizáveis. Coloque A em <code>.1</code> e B em <code>.2</code> (ou vice-versa) dentro do mesmo bloco.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Par C–D: rede diferente</strong>
+            <p>Use um prefixo de rede diferente do par A–B para evitar conflitos.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Máscaras sempre iguais nos dois lados</strong>
+            <p>Dois hosts se comunicando diretamente devem ter a mesma máscara.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 3 ============ -->
+    <div class="tab-panel" id="panel-2">
+      <div class="level-header">
+        <div class="level-num">03</div>
+        <div class="level-meta">
+          <h2>Switch — Múltiplos Hosts</h2>
+          <p>Um switch conecta 3+ hosts. Todos devem estar na mesma sub-rede.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        Um switch não separa redes. Todos os hosts conectados a ele precisam estar na mesma sub-rede com a mesma máscara.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">104.198.241.125</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.128</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>──[SW]──<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Host B</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">104.198.241.126</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.128</span></div>
+            </div>
+          </div>
+          <div style="text-align:center; color:var(--text-dim); font-size:0.75rem; margin: 4px 0">│</div>
+          <div style="text-align:center">
+            <div class="device-box" style="display:inline-block">
+              <div class="device-name">Host C</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">104.198.241.1</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.128</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Identifique a rede pelo host fixo</strong>
+            <p>Se um IP já está definido (ex: <code>104.198.241.125/25</code>), a rede é <code>104.198.241.0/25</code>. IPs disponíveis: .1 até .126.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Configure todos os outros hosts na mesma rede</strong>
+            <p>Todos os hosts no switch devem usar IPs do range <code>104.198.241.1</code>–<code>104.198.241.126</code> e máscara <code>255.255.255.128</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 4 ============ -->
+    <div class="tab-panel" id="panel-3">
+      <div class="level-header">
+        <div class="level-num">04</div>
+        <div class="level-meta">
+          <h2>Roteador — Duas Redes</h2>
+          <p>Um roteador conecta dois grupos de hosts em redes separadas.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        Cada interface do roteador deve estar em uma sub-rede DIFERENTE. Nunca use o mesmo prefixo de rede nos dois lados.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">85.17.5.4</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">85.17.5.1</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Router R (eth0)</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">85.17.5.1</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+            </div>
+          </div>
+          <div style="text-align:right; padding-right: 80px; color:var(--text-dim); font-size:0.75rem">│ (eth1)</div>
+          <div class="device-row" style="justify-content: flex-end">
+            <div class="device-box">
+              <div class="device-name">Host B</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">190.3.2.253</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">190.3.2.254</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Router R (eth1)</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">190.3.2.254</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">255.255.255.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Configure a interface do roteador (lado esquerdo)</strong>
+            <p>O IP do roteador deve estar na mesma sub-rede que o Host A. Ex: Host A = <code>85.17.5.4/24</code> → Router eth0 = <code>85.17.5.1/24</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Configure a interface do roteador (lado direito) em outra rede</strong>
+            <p>Use uma rede totalmente diferente. Ex: <code>190.3.2.0/24</code>. Router eth1 = <code>190.3.2.254/24</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Configure o Gateway nos hosts</strong>
+            <p>O gateway de cada host = IP da interface do roteador no mesmo lado. Host A → gateway <code>85.17.5.1</code>. Host B → gateway <code>190.3.2.254</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 5 ============ -->
+    <div class="tab-panel" id="panel-4">
+      <div class="level-header">
+        <div class="level-num">05</div>
+        <div class="level-meta">
+          <h2>Roteador + Tabela de Rotas</h2>
+          <p>Hosts precisam de rotas configuradas para alcançar redes remotas via roteador.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        Nos hosts, use <code>0.0.0.0/0</code> como destino na tabela de rotas — isso significa "qualquer destino", e o próximo hop é o gateway (IP do roteador).
+      </div>
+
+      <div class="diagram-box">
+        <h4>Configuração da Tabela de Rotas</h4>
+        <div class="net-diagram">
+          <div class="device-box" style="max-width: 400px">
+            <div class="device-name">Host A — Routing Table</div>
+            <div class="field"><span class="label">Dest</span><span class="val-route">0.0.0.0/0</span></div>
+            <div class="field"><span class="label">Next hop</span><span class="val-gw">54.117.30.126</span> <span style="color:var(--text-dim);font-size:0.7rem">(IP do roteador)</span></div>
+          </div>
+          <div class="device-box" style="max-width: 400px; margin-top: 12px">
+            <div class="device-name">Host B — Routing Table</div>
+            <div class="field"><span class="label">Dest</span><span class="val-route">0.0.0.0/0</span></div>
+            <div class="field"><span class="label">Next hop</span><span class="val-gw">54.117.30.62</span> <span style="color:var(--text-dim);font-size:0.7rem">(IP do roteador)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Configure IPs dos hosts e interfaces do roteador</strong>
+            <p>Assim como no Level 4 — cada lado do roteador é uma rede diferente.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Adicione rota padrão em cada host</strong>
+            <p>Destino: <code>0.0.0.0/0</code>. Next hop: IP da interface do roteador no mesmo lado do host.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Verifique rota no roteador (se necessário)</strong>
+            <p>Alguns níveis exigem que o roteador também tenha rotas para alcançar as redes dos hosts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 6 ============ -->
+    <div class="tab-panel" id="panel-5">
+      <div class="level-header">
+        <div class="level-num">06</div>
+        <div class="level-meta">
+          <h2>Internet — Rota Padrão</h2>
+          <p>A rede se conecta à internet. É necessário configurar rotas para o tráfego externo.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        A internet tem um IP fixo no diagrama. Você configura a rota do seu roteador para a internet, e a internet precisa saber como chegar à sua rede.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">10.0.0.2</span></div>
+              <div class="field"><span class="label">Mask</span><span class="val-mask">/24</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">10.0.0.1</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Router R</div>
+              <div class="field"><span class="label">eth0</span><span class="val-ip">10.0.0.1</span></div>
+              <div class="field"><span class="label">eth1</span><span class="val-ip">163.172.250.1</span></div>
+              <div class="field"><span class="label">Route→</span><span class="val-route">0.0.0.0/0 → eth1</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>────<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">🌐 Internet</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">163.172.250.12</span></div>
+              <div class="field"><span class="label">Route→</span><span class="val-route">10.0.0.0/24 → R</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Configure a rede interna normalmente</strong>
+            <p>Host A ↔ Router eth0: mesma sub-rede.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Rota do roteador para a internet</strong>
+            <p>Na tabela de rotas do roteador: destino <code>0.0.0.0/0</code>, next hop = IP da internet.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Rota da internet para a rede interna</strong>
+            <p>Na tabela de rotas da internet: destino = sua rede interna (ex: <code>10.0.0.0/24</code>), next hop = IP externo do seu roteador.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 7 ============ -->
+    <div class="tab-panel" id="panel-6">
+      <div class="level-header">
+        <div class="level-num">07</div>
+        <div class="level-meta">
+          <h2>Múltiplos Roteadores</h2>
+          <p>Dois roteadores interconectados. Rotas entre redes precisam cruzar dois saltos (hops).</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        O link entre os dois roteadores é uma rede própria (geralmente /30). Cada roteador precisa de rotas para as redes que não estão diretamente conectadas a ele.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host A</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">192.168.0.2/24</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">192.168.0.1</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>──<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Router A</div>
+              <div class="field"><span class="label">eth0</span><span class="val-ip">192.168.0.1/24</span></div>
+              <div class="field"><span class="label">eth1</span><span class="val-ip">10.0.0.1/30</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>──<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Router B</div>
+              <div class="field"><span class="label">eth0</span><span class="val-ip">10.0.0.2/30</span></div>
+              <div class="field"><span class="label">eth1</span><span class="val-ip">172.16.0.1/24</span></div>
+            </div>
+            <div class="connection-line"><div class="line"></div>──<div class="line"></div></div>
+            <div class="device-box">
+              <div class="device-name">Host B</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">172.16.0.2/24</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">172.16.0.1</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Link entre roteadores (rede /30)</strong>
+            <p>Router A eth1 = <code>10.0.0.1/30</code>, Router B eth0 = <code>10.0.0.2/30</code>. Essa é uma rede ponto-a-ponto.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Rotas no Router A</strong>
+            <p>Para alcançar a rede de Host B (<code>172.16.0.0/24</code>), próximo hop = <code>10.0.0.2</code> (Router B).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Rotas no Router B</strong>
+            <p>Para alcançar a rede de Host A (<code>192.168.0.0/24</code>), próximo hop = <code>10.0.0.1</code> (Router A).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Gateways dos hosts</strong>
+            <p>Host A → gateway <code>192.168.0.1</code>. Host B → gateway <code>172.16.0.1</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 8 ============ -->
+    <div class="tab-panel" id="panel-7">
+      <div class="level-header">
+        <div class="level-num">08</div>
+        <div class="level-meta">
+          <h2>Switch + Roteador + Internet</h2>
+          <p>Switch agrupando hosts, roteador e conexão com internet simultâneos.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        Neste nível há 3 redes distintas: rede do switch (hosts), link roteador-internet, e a "rede internet". Cada uma precisa ter sub-rede separada.
+      </div>
+
+      <div class="diagram-box">
+        <h4>Topologia</h4>
+        <div class="net-diagram">
+          <div class="device-row">
+            <div class="device-box">
+              <div class="device-name">Host C</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">10.0.0.2/26</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">10.0.0.1</span></div>
+            </div>
+            <div class="device-box">
+              <div class="device-name">Host D</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">10.0.0.3/26</span></div>
+              <div class="field"><span class="label">GW</span><span class="val-gw">10.0.0.1</span></div>
+            </div>
+          </div>
+          <div style="text-align:center; color:var(--text-dim); font-size:0.75rem; margin: 4px 0">└──[SW]──┘</div>
+          <div style="text-align:center; color:var(--text-dim); font-size:0.75rem">│</div>
+          <div style="text-align:center">
+            <div class="device-box" style="display:inline-block">
+              <div class="device-name">Router R</div>
+              <div class="field"><span class="label">eth0 (SW)</span><span class="val-ip">10.0.0.1/26</span></div>
+              <div class="field"><span class="label">eth1 (INT)</span><span class="val-ip">163.172.1.1/30</span></div>
+            </div>
+          </div>
+          <div style="text-align:center; color:var(--text-dim); font-size:0.75rem">│</div>
+          <div style="text-align:center">
+            <div class="device-box" style="display:inline-block">
+              <div class="device-name">🌐 Internet</div>
+              <div class="field"><span class="label">IP</span><span class="val-ip">163.172.1.2/30</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Rede do switch (/26 = 62 hosts)</strong>
+            <p>Router eth0 + Host C + Host D todos na mesma /26. Ex: <code>10.0.0.0/26</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Link roteador → internet (/30)</strong>
+            <p>Rede separada para o link ponto-a-ponto. Ex: <code>163.172.1.0/30</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Rotas de retorno da internet</strong>
+            <p>A internet precisa de rota para a rede dos hosts: destino <code>10.0.0.0/26</code>, next hop = IP externo do roteador.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 9 ============ -->
+    <div class="tab-panel" id="panel-8">
+      <div class="level-header">
+        <div class="level-num">09</div>
+        <div class="level-meta">
+          <h2>Topologia Complexa — 3 Redes</h2>
+          <p>Múltiplas sub-redes, dois roteadores, switch e internet. Exige planejamento cuidadoso.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot mid"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        Certifique-se de que cada sub-rede usa um range de IPs completamente diferente. Sobreposição de sub-redes causa falha na comunicação.
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Mapeie todas as redes presentes</strong>
+            <p>Identifique quantas redes existem: rede A (switch1), rede B (switch2), link roteador1↔roteador2, link para internet. Cada uma precisa de uma sub-rede diferente.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Use /30 para links ponto-a-ponto</strong>
+            <p>Entre roteadores e entre roteador e internet, use /30 para economizar IPs.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Configure rotas em ambos os roteadores</strong>
+            <p>Cada roteador precisa saber como chegar às redes que não estão diretamente conectadas a ele. Use rotas específicas ou rota padrão.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Rota na internet</strong>
+            <p>A internet precisa de rotas para TODAS as sub-redes internas, ou use um supernet que cubra todas (ex: <code>10.0.0.0/8</code> se todas usam esse prefixo).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>Verifique os logs</strong>
+            <p>Use os logs no bottom da interface do NetPractice para identificar o que ainda está faltando (gateway, rota incorreta, IP inválido).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LEVEL 10 ============ -->
+    <div class="tab-panel" id="panel-9">
+      <div class="level-header">
+        <div class="level-num">10</div>
+        <div class="level-meta">
+          <h2>Nível Final — Topologia Completa</h2>
+          <p>O nível mais complexo: múltiplos switches, roteadores, sub-redes e internet integrados.</p>
+        </div>
+        <div class="difficulty">
+          <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot hard"></div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        Dica final: resolva de dentro para fora. Configure primeiro as redes locais (hosts + switches), depois os links entre roteadores, e por último as rotas para internet.
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Desenhe o mapa em papel</strong>
+            <p>Anote cada dispositivo, suas interfaces, e qual rede cada interface pertence. Isso evita erros de sub-rede sobreposta.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Defina blocos de endereçamento</strong>
+            <p>Exemplo: use <code>10.0.1.0/24</code> para rede A, <code>10.0.2.0/24</code> para rede B, <code>10.0.3.0/30</code> para link entre roteadores, etc.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Configure hosts e interfaces de roteadores</strong>
+            <p>Preencha IPs, máscaras e gateways nos hosts. Configure as interfaces dos roteadores com IPs das respectivas redes.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Configure todas as tabelas de rotas</strong>
+            <p>Cada roteador precisa de rotas para redes que não conhece diretamente. Use <code>0.0.0.0/0</code> como rota padrão quando possível.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>Configure rotas na internet</strong>
+            <p>A internet deve ter rotas de retorno para cada sub-rede interna, ou um supernet (ex: <code>10.0.0.0/8</code>).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <strong>Exporte antes de sair!</strong>
+            <p>Clique em <strong>[Get my config]</strong> assim que o nível estiver completo. O arquivo exportado vai para o seu repositório Git.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info" style="margin-top: 20px">
+        <span class="callout-icon">📌</span>
+        Lembre-se: durante a defesa você terá que resolver 3 níveis aleatórios com tempo limitado. Pratique até conseguir resolver cada nível em menos de 5 minutos.
+      </div>
+    </div>
+
+  </div><!-- /tabs-wrapper -->
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px">
+    <span>NetPractice — 42 School Networking Project</span>
+    <span>TCP/IP · Subnetting · Routing · Gateways</span>
+  </div>
+</footer>
+
+<script>
+  function showTab(idx) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.tab-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+  }
+</script>
+</body>
+</html>
